@@ -1,0 +1,19 @@
+[project]
+name = "texas-holdem-hub"
+version = "0.1.0"
+description = "A professional Texas Hold'em rules and beginner strategy assistant"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    "litellm>=1.30.0",
+    "google-cloud-aiplatform>=1.40.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]

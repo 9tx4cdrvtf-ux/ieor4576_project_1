@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Texas Hold'em Hub - Rules & Beginner Guide</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+        <style>
+            :root {
+                --table-green: #163d16;
+                --felt-green: #1e521e;
+                --gold: #d4af37;
+                --wood: #4e3629;
+                --text-light: #f0f0f0;
+                --heart-red: #ff4d4d;
+            }
+
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: radial-gradient(circle, var(--felt-green) 0%, #0a1f0a 100%);
+                color: var(--text-light);
+                padding: 1rem;
+                overflow: hidden;
+            }
+
+            #container {
+                width: 100%;
+                max-width: 1050px;
+                height: 90vh;
+                display: flex;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.5);
+                border: 6px solid var(--wood);
+                border-radius: 60px;
+                box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+                position: relative;
+            }
+
+            #header {
+                padding: 1.5rem 3rem 1.2rem;
+                text-align: center;
+                border-bottom: 1.5px solid var(--gold);
+                margin: 0 4rem;
+            }
+
+            .suit-bar {
+                text-align: center;
+                margin-bottom: 8px;
+                font-size: 0.7rem;
+                letter-spacing: 15px;
+                opacity: 0.6;
+            }
+            .red-suit { color: var(--heart-red); }
+
+            #header h1 {
+                font-size: 1.6rem;
+                color: var(--gold);
+                text-transform: uppercase;
+                letter-spacing: 0.15em;
+                margin-bottom: 0.4rem;
+            }
+
+            #header p {
+                font-size: 0.85rem;
+                color: #aaa;
+                letter-spacing: 0.08em;
+                font-weight: 300;
+                text-transform: uppercase;
+            }
+
+            #messages {
+                flex: 1;
+                overflow-y: auto;
+                padding: 1.5rem 4rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1.2rem;
+                scrollbar-width: thin;
+                scrollbar-color: var(--gold) transparent;
+            }
+
+            .msg {
+                max-width: 85%;
+                padding: 1rem 1.4rem;
+                border-radius: 18px;
+                line-height: 1.6;
+                font-size: 0.85rem;
+                animation: slideUp 0.4s ease-out;
+            }
+
+            @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+            .msg.user {
+                align-self: flex-end;
+                background: #2c2c2c;
+                border: 1px solid #444;
+                border-bottom-right-radius: 4px;
+            }
+
+            .msg.assistant {
+                align-self: flex-start;
+                background: rgba(255, 255, 255, 0.08);
+                border-left: 3px solid var(--gold);
+                border-bottom-left-radius: 4px;
+                font-family: 'JetBrains Mono', monospace;
+            }
+
+            .msg .role {
+                font-size: 0.65rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                margin-bottom: 0.4rem;
+                letter-spacing: 0.1em;
+                color: var(--gold);
+            }
+
+            #input-area-wrapper {
+                background: rgba(0,0,0,0.3);
+                padding: 1.5rem 4rem 2.5rem;
+            }
+
+            #input-area {
+                display: flex;
+                gap: 0.8rem;
+            }
+
+            #user-input {
+                flex: 1;
+                background: rgba(255,255,255,0.07);
+                border: 1px solid rgba(212, 175, 55, 0.4);
+                border-radius: 30px;
+                padding: 0.8rem 1.5rem;
+                color: white;
+                font-size: 0.9rem;
+                outline: none;
+            }
+
+            /* --- 按钮 Hover 发光效果 --- */
+            .btn {
+                border-radius: 30px;
+                font-weight: 700;
+                text-transform: uppercase;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border: none;
+                padding: 0 1.8rem;
+                font-size: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #send-btn { 
+                background: var(--gold); 
+                color: #111; 
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            }
+
+            #send-btn:hover:not(:disabled) { 
+                filter: brightness(1.2);
+                box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+                transform: translateY(-2px);
+            }
+
+            #new-session-btn { 
+                background: transparent; 
+                color: #888; 
+                border: 1px solid #444; 
+            }
+
+            #new-session-btn:hover:not(:disabled) { 
+                color: var(--gold); 
+                border-color: var(--gold);
+                background: rgba(212, 175, 55, 0.05);
+                filter: brightness(1.3);
+                box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+                transform: translateY(-1px);
+            }
+
+            .btn:active:not(:disabled) {
+                transform: translateY(0) scale(0.96);
+                filter: brightness(0.9);
+            }
+
+            .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+            .loading .content { font-style: italic; color: #888; }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <div class="suit-bar">
+                    <span>♠</span><span class="red-suit">♥</span><span>♣</span><span class="red-suit">♦</span>
+                </div>
+                <h1>Texas Hold'em Hub</h1>
+                <p>Rules · Terminology · Sequence · Strategy</p>
+            </div>
+            
+            <div id="messages">
+                <div class="msg assistant">
+                    <div class="role">The River Oracle</div>
+                    <div class="content">Welcome to the table! I'm your Texas Hold'em strategy coach. 
+
+Ask me about rules, terminology, and strategic analysis.</div>
+                </div>
+            </div>
+
+            <div id="input-area-wrapper">
+                <div id="input-area">
+                    <button id="new-session-btn" class="btn">New Hand</button>
+                    <input
+                        type="text"
+                        id="user-input"
+                        placeholder="Ask about rules or hands..."
+                        autocomplete="off"
+                    />
+                    <button id="send-btn" class="btn">Ask</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const messagesContainer = document.getElementById("messages");
+            const userInput = document.getElementById("user-input");
+            const sendBtn = document.getElementById("send-btn");
+            const newSessionBtn = document.getElementById("new-session-btn");
+            let sessionId = null;
+
+            function addMessage(role, text, isLoading = false) {
+                const div = document.createElement("div");
+                div.className = "msg " + (role === "User" ? "user" : "assistant") + (isLoading ? " loading" : "");
+                const roleDiv = document.createElement("div");
+                roleDiv.className = "role";
+                roleDiv.textContent = role === "User" ? "User" : "The River Oracle";
+                const contentDiv = document.createElement("div");
+                contentDiv.className = "content";
+                contentDiv.style.whiteSpace = "pre-wrap"; 
+                contentDiv.textContent = text;
+                div.appendChild(roleDiv);
+                div.appendChild(contentDiv);
+                messagesContainer.appendChild(div);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                return div;
+            }
+
+            async function resetSession() {
+                // 适配后端 /clear 接口
+                if (sessionId) {
+                    try {
+                        await fetch(`/clear?session_id=${sessionId}`, { method: "POST" });
+                    } catch (e) {
+                        console.error("Failed to clear session:", e);
+                    }
+                }
+                sessionId = null;
+                messagesContainer.innerHTML = '';
+                addMessage("Assistant", "The deck is shuffled and the table is reset. How can I help you now, Master?");
+            }
+
+            async function send() {
+                const text = userInput.value.trim();
+                if (!text) return;
+                userInput.value = "";
+                sendBtn.disabled = true;
+                addMessage("User", text);
+                
+                // 模拟正在查询规则库的状态
+                const loadingMsg = addMessage("Assistant", "Analyzing the spot...", true);
+
+                try {
+                    const res = await fetch("/chat", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 
+                            message: text, 
+                            session_id: sessionId 
+                        }),
+                    });
+                    
+                    const data = await res.json();
+                    sessionId = data.session_id; 
+                    
+                    loadingMsg.querySelector(".content").textContent = data.response;
+                    loadingMsg.classList.remove("loading");
+                } catch (e) {
+                    loadingMsg.querySelector(".content").textContent = "Error: The oracle is temporarily disconnected.";
+                    loadingMsg.classList.remove("loading");
+                } finally {
+                    sendBtn.disabled = false;
+                    userInput.focus();
+                }
+            }
+
+            sendBtn.addEventListener("click", send);
+            newSessionBtn.addEventListener("click", resetSession);
+            userInput.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+            userInput.focus();
+        </script>
+    </body>
+</html>
