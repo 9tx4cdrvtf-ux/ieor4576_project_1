@@ -2,6 +2,7 @@
 
 import json
 
+from collections import defaultdict
 from conftest import get_review, judge_with_rubric
 from golden_dataset import GOLDEN_DATASET
 
@@ -9,6 +10,7 @@ RUBRIC_EXAMPLES = [
     {
         "id": item["id"],
         "input": item["input"],
+        "category": item["category"],
     }
     for item in GOLDEN_DATASET
 ]
@@ -43,6 +45,8 @@ def test_rubric_cases():
     """Each bot response should score >= 6/10 against the rubric."""
     print()
     ratings = []
+    stats = defaultdict(lambda: {"total": 0, "passed": 0})
+
     for case in RUBRIC_EXAMPLES:
         response = get_review(case["input"])
         rating = judge_with_rubric(
@@ -51,8 +55,18 @@ def test_rubric_cases():
             rubric=RUBRIC,
         )
         ratings.append(rating)
-        print(f"  {case['id']}: {rating}/10")
+
+        cat = case["category"]
+        stats[cat]["total"] += 1
+        if rating >= 6:
+            stats[cat]["passed"] += 1
+
+        #print(f"  {case['id']} ({cat}): {rating}/10")
         assert rating >= 6, (
             f"[{case['id']}] Rating {rating}/10 — response: {response[:200]}"
         )
-    print(f"  average: {sum(ratings) / len(ratings):.1f}/10")
+
+    print(f"  overall average: {sum(ratings) / len(ratings):.1f}/10")
+    for cat, s in stats.items():
+        rate = s["passed"] / s["total"]
+        print(f"  [{cat}] pass rate: {s['passed']}/{s['total']} ({rate:.0%})")
