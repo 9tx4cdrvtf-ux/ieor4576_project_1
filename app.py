@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 from litellm import completion
 from pydantic import BaseModel
 import re
+import os
 
 load_dotenv()
 
@@ -51,7 +52,7 @@ If a question falls outside the allowed scope, respond with the escape hatch mes
 
 <escape_hatch>
 If a question falls outside the allowed scope, respond with:
-"I'm not sure about that. I can only help with Texas Hold'em rules and gameplay mechanics."
+"I apologize, but I cannot assist with this specific topic. My expertise is strictly limited to Texas Hold'em rules and beginner strategy."
 </escape_hatch>
 """
 
@@ -91,8 +92,7 @@ FEW_SHOT_EXAMPLES = [
     {
         "user": "How much should I bet to maximize my winnings on this hand?",
         "assistant": (
-            "I'm not sure about that. I can only help with Texas Hold'em rules, gameplay mechanics, "
-            "and beginner-friendly strategy tips. I cannot provide financial or betting advice."
+           "I apologize, but I cannot assist with this specific topic. My expertise is strictly limited to Texas Hold'em rules and beginner strategy."
         ),
     },
 ]
@@ -118,9 +118,16 @@ def apply_python_backstop(text: str) -> str | None:
     text_lc = text.lower()
 
     # Safety Handling
-    safety_keywords = ["suicide", "trump", "politics", "financial", "gambling advice", "win money", "kill"]
+    safety_keywords = [
+    "suicide", "kill", "harm", "death", "bomb", "weapon", "terrorist", 
+    "trump", "biden", "politics", "election", "democrat", "republican", "government",
+    "financial", "stock", "win money", "make money", "betting advice", 
+    "real money", "cash out", "gamble", "jackpot", "crypto", "bitcoin",
+    "doctor", "medical", "depressed", "therapy", "medicine", "pill",
+    "illegal", "hack", "steal", "drug", "porn"
+    ]
     if any(key in text_lc for key in safety_keywords):
-        return "I'm not sure about that. I can only help with Texas Hold'em rules and gameplay mechanics."
+        return "I apologize, but I cannot assist with this specific topic. My expertise is strictly limited to Texas Hold'em rules and beginner strategy."
 
     # if the model already indicates it cannot answer 
     if "i'm not sure" in text_lc or "can only help" in text_lc:
@@ -222,4 +229,5 @@ def clear(session_id: str | None = None):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
