@@ -36,5 +36,5 @@ The `evals/` directory contains pytest-based evaluations using Model-as-a-Judge:
 - `test_refusal_detection.py` - Verify the bot correctly triggers the "escape hatch" for out-of-scope topics
 
 ```bash
-uv run pytest evals/ -v
+uv run pytest evals/ -sv
 ```
