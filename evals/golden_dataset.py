@@ -27,7 +27,7 @@ GOLDEN_DATASET = [
     },
     {
         "id": 6,
-        "input": "Can I use four cards from the board?",
+        "input": "Can my final hand consist of four board cards and one hole card?",
         "expected": "Yes, you use any combination of your 2 cards and the 5 board cards."
     },
     {

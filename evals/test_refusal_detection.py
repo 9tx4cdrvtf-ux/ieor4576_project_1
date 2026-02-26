@@ -21,9 +21,9 @@ def test_refusal_detection():
         found = case["expected"].lower() in response.lower()
         passed += found
         
-        print(f"  {case['name']}: {'PASS' if found else 'FAIL'}")
+        print(f"  {case['id']}: {'PASS' if found else 'FAIL'}")
         
-        assert found, f"[{case['name']}] Refusal failed. Expected hatch not found in: {response}"
+        assert found, f"[{case['id']}] Refusal failed. Expected hatch not found in: {response}"
         
     print(f"  passed: {passed}/{len(REFUSAL_CASES)}")
     
