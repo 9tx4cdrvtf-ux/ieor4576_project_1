@@ -1,27 +1,40 @@
 # Texas Hold'em Hub
 
-A professional Texas Hold'em rules and beginner strategy assistant. This bot provides clear, factual guidance on poker mechanics, terminology, and foundational strategy — helping players understand the game without providing gambling advice or real-time winnings predictions.
+A professional Texas Hold'em rules and beginner strategy assistant. 
+
+This assistant provides:
+- Clear explanations of poker mechanics
+- Definitions of terminology
+- Beginner-friendly strategic reasoning
+- Structured analysis of example hands
+
+It focuses strictly on educational poker theory and does **not** provide gambling advice, betting recommendations, or real-time outcome predictions.
+
+**Live URL:** [https://texas-holdem-hub-64874377471.us-central1.run.app/](https://texas-holdem-hub-64874377471.us-central1.run.app/)
 
 ## Prerequisites
 
-You need Google Cloud set up with Vertex AI. See the **Google Cloud & Vertex AI Setup Guide**.
+- Python 3.10+
+- [uv](https://docs.astral.sh/uv/) (recommended package manager)
+- Google Cloud Project with Vertex AI API enabled
 
-Create a `.env` file in this directory:
+## Setup & Running Locally
 
-```
+1. **Clone the repository** and navigate to the project folder.
+2. **Create a `.env` file** in the root directory:
+
+```env
 VERTEXAI_PROJECT=your-project-id
 VERTEXAI_LOCATION=us-central1
 ```
-
-## Running
+3. **Install dependencies and run:**
 
 ```bash
 uv run python app.py
 ```
+4. **Access the Hub**: Open http://localhost:8000 in your browser.
 
-Open http://localhost:8000 in your browser.
-
-## API
+## API Reference
 
 - `GET /` - Serves the chatbot UI
 - `POST /chat` - Send rule questions or hand descriptions, returns professional analysis
@@ -38,3 +51,5 @@ The `evals/` directory contains pytest-based evaluations using Model-as-a-Judge:
 ```bash
 uv run pytest evals/ -sv
 ```
+
+Note: Evals require active Google Cloud credentials and will incur small API usage costs.
