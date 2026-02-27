@@ -130,7 +130,7 @@ def apply_python_backstop(text: str) -> str | None:
         return "I apologize, but I cannot assist with this specific topic. My expertise is strictly limited to Texas Hold'em rules and beginner strategy."
 
     # if the model already indicates it cannot answer 
-    if "i'm not sure" in text_lc or "can only help" in text_lc:
+    if "apologize" in text_lc or "cannot assist" in text_lc:
         return None  # already reject
 
     return None
